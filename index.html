@@ -26,7 +26,7 @@
 
 
           const scene = new THREE.Scene();
-
+          scene.background = new THREE.Color( 0x222266 );
 
             const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
@@ -38,18 +38,27 @@
             const material = new THREE.MeshBasicMaterial( { color: 0x576FBA } );
             const cube = new THREE.Mesh( geometry, material );
             //scene.add( cube );
-
+            const light = new THREE.PointLight( 0xff0000, 1, 100 );
+            light.position.set( 50, 50, 50 );
+            scene.add( light );
             camera.position.z = 5;
             // camera.position.x = 5;
             // camera.position.y = 2;
 
 
             const loader = new GLTFLoader();
-            const material_02 = new THREE.MeshBasicMaterial( { color: 0x576FBA } );
+            const material_02 = new THREE.MeshBasicMaterial( { color: 0xFF0000 } );
 
-            loader.load( 'models/cube_02.glb', function ( gltf ) {
+            loader.load( 'models/cube_03.glb', function ( gltf ) {
                 console.log('Cubo añadido')
-                
+                scene.add( gltf.scene );
+
+                var object = gltf.scene;				
+	            gltf.scene.scale.set( 2, 2, 2 );			   
+	            gltf.scene.position.x = 0;				    //Position (x = right+ left-) 
+                gltf.scene.position.y = 0;				    //Position (y = up+, down-)
+	            gltf.scene.position.z = 0;				    //Position (z = front +, back-)
+	
 	            scene.add( gltf.scene );
 
             }, undefined, function ( error ) {
@@ -58,6 +67,8 @@
 
             } );
 
+
+            //renderer.setClearColor( 0x555566, 80);
             renderer.render( scene, camera );
                 //cube.rotation.x += 0.01;
                 //cube.rotation.y += 0.01;
