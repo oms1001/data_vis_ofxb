@@ -43,14 +43,7 @@
             // camera.position.x = 5;
             // camera.position.y = 2;
 
-            function animate() {
-	        requestAnimationFrame( animate );
-	        renderer.render( scene, camera );
-                cube.rotation.x += 0.01;
-                cube.rotation.y += 0.01;
-            }
-            animate();
-
+            
             const loader = new GLTFLoader();
 
             loader.load( 'models/esfera.glb', function ( gltf ) {
@@ -62,6 +55,17 @@
 	        console.error( error );
 
             } );
+
+
+            function animate() {
+	        requestAnimationFrame( animate );
+	        renderer.render( scene, camera );
+                cube.rotation.x += 0.01;
+                cube.rotation.y += 0.01;
+            }
+            animate();
+
+
         
         </script>
 	</body>
