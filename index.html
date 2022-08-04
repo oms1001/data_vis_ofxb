@@ -45,9 +45,11 @@
 
 
             const loader = new GLTFLoader();
+            const material_02 = new THREE.MeshBasicMaterial( { color: 0x576FBA } );
 
             loader.load( 'models/cube_02.glb', function ( gltf ) {
                 console.log('Cubo añadido')
+                
 	            scene.add( gltf.scene );
 
             }, undefined, function ( error ) {
