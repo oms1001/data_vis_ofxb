@@ -21,69 +21,114 @@
 
         <script type="module">
         
-          import * as THREE from 'three';
-          import { GLTFLoader } from 'https://unpkg.com/three@0.143.0/examples/jsm/loaders/GLTFLoader.js';
+        import * as THREE from 'three'
+        // https://unpkg.com/three@0.143.0/examples/jsm/loaders/GLTFLoader.js
+        // import { OrbitControls } from 'https://unpkg.com/three@0.143.0/examples/jsm/controls/OrbitControls'
+        import { GLTFLoader } from 'https://unpkg.com/three@0.143.0/examples/jsm/loaders/GLTFLoader.js'
+        import { OrbitControls } from 'https://unpkg.com/three@0.143.0/examples/jsm/controls/OrbitControls.js'
+        import Stats from 'https://unpkg.com/three@0.143.0/examples/jsm/libs/stats.module'
+                
+        const scene = new THREE.Scene()
 
+        // Ayuda de Axis
+        //scene.add(new THREE.AxesHelper(5))
+                
+        const light = new THREE.SpotLight();
+        light.position.set(60,60,60)
+        light.power = 4.5
+        scene.add(light);
+                
+        const camera = new THREE.PerspectiveCamera(
+            75,
+            window.innerWidth / window.innerHeight,
+            0.1,
+            1000
+        )
+        camera.position.x = 15
+        camera.position.y = 15
+        camera.position.z = 15
+        camera.rotation.y = Math.PI * 0.5;
 
-          const scene = new THREE.Scene();
-          scene.background = new THREE.Color( 0x222266 );
+        const renderer = new THREE.WebGLRenderer()
+        //renderer.physicallyCorrectLights = true
+        renderer.shadowMap.enabled = true
+        renderer.outputEncoding = THREE.sRGBEncoding
+        renderer.setSize(window.innerWidth, window.innerHeight)
+        document.body.appendChild(renderer.domElement)
+                
+        const controls = new OrbitControls(camera, renderer.domElement)
+        controls.enableDamping = true
+                
+        const loader = new GLTFLoader()
+        let mixer;
+        loader.load(
+            'mapas/mapa.gltf',
+            function (gltf) {
+                gltf.scene.scale.set( 0.1, 0.1, 0.1 );			   
+	            // gltf.scene.position.x = 0;				    
+                // gltf.scene.position.y = 0;				    
+	            // gltf.scene.position.z = 0;
+                const model = gltf.scene;	
+                scene.add(model);
+                mixer = new THREE.AnimationMixer(model);
+                const clips = gltf.animations;
 
-            const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+                clips.forEach(function(clip) {
+                const action = mixer.clipAction(clip);
+                action.play();
+    });
+            },
+            (xhr) => {
+                console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
+            },
+            (error) => {
+                console.log(error)
+            }
+        )
+          
+        window.addEventListener('resize', onWindowResize, false)
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight
+            camera.updateProjectionMatrix()
+            renderer.setSize(window.innerWidth, window.innerHeight)
+            render()
+        }
+        
+        // Estadística de FPS
+        // const stats = Stats()
+        // document.body.appendChild(stats.dom)
 
-            const renderer = new THREE.WebGLRenderer();
-            renderer.setSize( window.innerWidth, window.innerHeight );
-            document.body.appendChild( renderer.domElement );
-
-            const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-            const material = new THREE.MeshBasicMaterial( { color: 0x576FBA } );
-            const cube = new THREE.Mesh( geometry, material );
-            //scene.add( cube );
-            const light = new THREE.PointLight( 0xff0000, 1, 100 );
-            light.position.set( 50, 50, 50 );
-            scene.add( light );
-            camera.position.z = 5;
-            // camera.position.x = 5;
-            // camera.position.y = 2;
-
-
-            const loader = new GLTFLoader();
-            const material_02 = new THREE.MeshBasicMaterial( { color: 0xFF0000 } );
-
-            loader.load( 'models/cube_03.glb', function ( gltf ) {
-                console.log('Cubo añadido')
-                scene.add( gltf.scene );
-
-                var object = gltf.scene;				
-	            gltf.scene.scale.set( 2, 2, 2 );			   
-	            gltf.scene.position.x = 0;				    //Position (x = right+ left-) 
-                gltf.scene.position.y = 0;				    //Position (y = up+, down-)
-	            gltf.scene.position.z = 0;				    //Position (z = front +, back-)
-	
-	            scene.add( gltf.scene );
-
-            }, undefined, function ( error ) {
-
-	        console.error( error );
-
-            } );
-
-
-            //renderer.setClearColor( 0x555566, 80);
-            renderer.render( scene, camera );
-                //cube.rotation.x += 0.01;
-                //cube.rotation.y += 0.01;
+        const clock = new THREE.Clock();
+        function animate() {
+            //requestAnimationFrame(animate)
+        
+            controls.update()
+            if(mixer)
+                mixer.update(clock.getDelta());
             
+            render()
+        
+            // stats.update()
+        }
 
-            //function animate() {
-	        //requestAnimationFrame( animate );
-	        //renderer.render( scene, camera );
-            //    cube.rotation.x += 0.01;
-            //    cube.rotation.y += 0.01;
-            //}
-            //animate();
+            //Actualizar esto para animar el modelo
+        // const clock = new THREE.Clock();
+        // function animate() {
+        // if(mixer)
+        // mixer.update(clock.getDelta());
+        // renderer.render(scene, camera);
+        //}
+
+        renderer.setAnimationLoop(animate);
+
 
 
         
+        function render() {
+            renderer.render(scene, camera)
+        }
+        
+animate()
         </script>
 	</body>
 </html>

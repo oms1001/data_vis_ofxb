@@ -1,0 +1,11 @@
+Model Information:
+* title:	Test Model_01
+* source:	https://sketchfab.com/3d-models/test-model-01-53573fdcb7ea4ac7b460f57d0f8dabc0
+* author:	adrinuk (https://sketchfab.com/adrinuk)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Test Model_01" (https://sketchfab.com/3d-models/test-model-01-53573fdcb7ea4ac7b460f57d0f8dabc0) by adrinuk (https://sketchfab.com/adrinuk) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
